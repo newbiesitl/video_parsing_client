@@ -3,8 +3,9 @@ import argparse
 from src import cache
 
 parser = argparse.ArgumentParser()
-parser.parse_args()
+parser.add_argument("detect", help="detect car of a given time stamp",
+                    type=int)
 
-# your code here, delete the following (just for testing)!
-cache.get_index_file()
-print('it worked!')
+
+args = parser.parse_args()
+ts = args.detect
