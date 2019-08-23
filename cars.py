@@ -1,7 +1,7 @@
 import argparse
 
 from src import cache
-from src.utils import detect_car_give_ts
+from src.utils import detect_car_give_ts, is_match, analyze
 
 parser = argparse.ArgumentParser()
 parser.add_argument("args", nargs='*', default=None, )
@@ -28,18 +28,26 @@ python cars.py analyze 1538076003 1538079781
 ''')
     exit()
 
+import json
 
 commend = args.args[0]
 if commend.lower() == 'detect':
     ts = args.args[1]
     ts = int(ts)
     ret = detect_car_give_ts(ts)
-    print(ret)
+    # ret = json.loads(ret)
     print(ret['result'])
 elif commend.lower() == 'compare':
-    pass
+    if len(args.args) < 3:
+        print('need to pass at least 3 argument `python cars.py compare ts1 ts2`')
+    ts1, ts2 = args.args[1], args.args[2]
+    ret = is_match(ts1, ts2)
+    print(ret)
 elif commend.lower() == 'analyze':
-    pass
+    if len(args.args) < 3:
+        print('need to pass at least 3 argument `python cars.py analyze ts1 ts2`')
+    ts1, ts2 = int(args.args[1]), int(args.args[2])
+    analyze(ts1, ts2)
 else:
     print('unknown commend %s' % (commend))
     exit()
