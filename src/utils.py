@@ -18,26 +18,23 @@ def analyze(ts1, ts2):
     diff = ts2-ts1
     step_size = max(diff//100, 1)
     cur_ts = ts1
-    is_prev_frame_car = None
-    original_car_frame_ts = None
+    car_left_b = None
     last_car_end = None
-    while cur_ts < ts2:
+    car_right_b = None
+    while cur_ts <= ts2:
         is_car_ret = detect_car_give_ts(cur_ts)
         if is_car_ret['status'] == 'error':
             cur_ts += step_size
             continue
 
-        if is_prev_frame_car is None:
-            is_prev_frame_car = detect_car_give_ts(cur_ts)['result'].lower()
-            cur_ts += step_size
-        elif detect_car_give_ts(cur_ts)['result'].lower() == 'true' and is_prev_frame_car == 'false':
-            # print('car detected at %d' % (cur_ts))
+        if detect_car_give_ts(cur_ts)['result'].lower() == 'true': #and is_prev_frame_car == 'false':
             reference_ts = cur_ts
-            if original_car_frame_ts is None:
-                original_car_frame_ts = reference_ts
-            if last_car_end is not None and reference_ts > last_car_end +1:
-                print('car parked from %d to %d' % (original_car_frame_ts, last_car_end))
-                original_car_frame_ts = reference_ts
+            car_right_b = cur_ts
+            if car_left_b is None:
+                car_left_b = reference_ts
+            if last_car_end is not None and reference_ts > last_car_end + 1:
+                print('car parked from %d to %d' % (car_left_b, last_car_end))
+                car_left_b = reference_ts
             # run binary search here
             l = cur_ts
             r = ts2
@@ -45,7 +42,7 @@ def analyze(ts1, ts2):
             while l < m:
                 # print(l, r)
                 if is_match(reference_ts, m-1)['result'].lower() == 'true' and is_match(reference_ts, m)['result'].lower() == 'false':
-                    is_prev_frame_car = 'false'
+                    car_right_b = cur_ts
                     break
                 elif is_match(reference_ts, m-1)['result'].lower() == 'true' and is_match(reference_ts, m)['result'].lower() == 'true':
                     l = m
@@ -56,11 +53,17 @@ def analyze(ts1, ts2):
 
                 m = (l+r)//2
             cur_ts = m+1
+            # print('processing %.0f%s \r' % ((cur_ts - ts1) / (ts2 - ts1) * 100, '%'))
             last_car_end = m
+
         else:
             cur_ts += step_size
+            # print('processing %.0f%s \r' % ((cur_ts-ts1)/(ts2-ts1) * 100, '%'))
+    if car_left_b is not None and car_left_b < car_right_b:
+        print('car parked from %d to %d' % (car_left_b, last_car_end))
 
 
 if __name__ == "__main__":
     ts1, ts2 = 1538076003, 1538079781
+    ts1, ts2 = 1538087970, 1538097972
     analyze(ts1, ts2)
