@@ -33,8 +33,9 @@ commend = args.args[0]
 if commend.lower() == 'detect':
     ts = args.args[1]
     ts = int(ts)
-    print(detect_car_give_ts(ts))
-    pass
+    ret = detect_car_give_ts(ts)
+    print(ret)
+    print(ret['result'])
 elif commend.lower() == 'compare':
     pass
 elif commend.lower() == 'analyze':
