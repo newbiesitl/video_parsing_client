@@ -41,14 +41,22 @@ def analyze(ts1, ts2):
             m = (l+r)//2
             while l < m:
                 # print(l, r)
-                if is_match(reference_ts, m-1)['result'].lower() == 'true' and is_match(reference_ts, m)['result'].lower() == 'false':
+                reference_with_prev = is_match(reference_ts, m-1)
+                reference_with_cur = is_match(reference_ts, m)
+                if reference_with_prev['status'] == 'error':
+                    print(reference_with_prev)
+                    break
+                if reference_with_cur['status'] == 'error':
+                    print(reference_with_cur)
+                    break
+                if reference_with_prev['result'].lower() == 'true' and reference_with_cur['result'].lower() == 'false':
                     car_right_b = cur_ts
                     break
-                elif is_match(reference_ts, m-1)['result'].lower() == 'true' and is_match(reference_ts, m)['result'].lower() == 'true':
+                elif reference_with_prev['result'].lower() == 'true' and reference_with_cur['result'].lower() == 'true':
                     l = m
-                elif is_match(reference_ts, m-1)['result'].lower() == 'false' and is_match(reference_ts, m)['result'].lower() == 'true':
+                elif reference_with_prev['result'].lower() == 'false' and reference_with_cur['result'].lower() == 'true':
                     l = m
-                elif is_match(reference_ts, m-1)['result'].lower() == 'false' and is_match(reference_ts, m)['result'].lower() == 'false':
+                elif reference_with_prev['result'].lower() == 'false' and reference_with_cur['result'].lower() == 'false':
                     r = m
 
                 m = (l+r)//2
@@ -64,6 +72,6 @@ def analyze(ts1, ts2):
 
 
 if __name__ == "__main__":
-    ts1, ts2 = 1538076003, 1538079781
     ts1, ts2 = 1538087970, 1538097972
+    ts1, ts2 = 1538076003, 1538079781
     analyze(ts1, ts2)
