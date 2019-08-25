@@ -1,26 +1,14 @@
 import requests
-from src.client_config import DETECT_CAR_ENDPOINT_PREFIX, IS_SAME_CAR_ENDPOINT_PREFIX, GET_IMAGE_ENDPOINT_PREFIX, \
-    CACHE_DIR
-import numpy as np
-import cv2, os
+
+from src.image_utils import download_image
+from src.client_config import DETECT_CAR_ENDPOINT_PREFIX, IS_SAME_CAR_ENDPOINT_PREFIX
+
 
 def detect_car_give_ts(ts):
     url = DETECT_CAR_ENDPOINT_PREFIX+str(ts)
     r = requests.get(url)
     return r.json()
 
-def download_image(ts):
-    url = GET_IMAGE_ENDPOINT_PREFIX+str(ts)
-    r = requests.get(url)
-    file_path = os.path.join(CACHE_DIR, str(ts)+'.jpeg')
-    f = open(file_path, 'wb+')
-    f.write(bytearray(r.content))
-    f.close()
-
-    # nparr = np.fromstring(r.content, np.uint8)
-    # decode image
-    # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    # cv2.imwrite(os.path.join(DATA_FOLDER, str(ts)+'.ts'), img)
 
 def is_match(ts1, ts2):
     url = IS_SAME_CAR_ENDPOINT_PREFIX+'timeStamp1=%s&timeStamp2=%s' % (ts1, ts2)

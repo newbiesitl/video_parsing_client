@@ -1,6 +1,5 @@
 import argparse
 from src.utils import detect_car_give_ts, is_match, analyze
-
 parser = argparse.ArgumentParser()
 parser.add_argument("args", nargs='*', default=None, )
 parser.add_argument('-v', '--cache_dir', default=None,)
@@ -9,9 +8,9 @@ args = parser.parse_args()
 cache_dir = args.cache_dir
 args_len = len(args.args)
 if cache_dir is not None:
-    global CACHE_DIR
-    CACHE_DIR = cache_dir
-    print('cache_dir', CACHE_DIR)
+    global CACHE_DIRs
+    CACHE_DIRs = cache_dir.split(':')
+    print('cache_dir', CACHE_DIRs)
 
 if args_len < 2:
     print('''
@@ -31,7 +30,6 @@ python cars.py analyze 1538076003 1538079781
 ''')
     exit()
 
-import json
 
 commend = args.args[0]
 if commend.lower() == 'detect':

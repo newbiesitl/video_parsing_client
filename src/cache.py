@@ -1,14 +1,14 @@
 import os
 import requests
 
-from src.client_config import CACHE_DIR
-
+from src.client_config import CACHE_DIRs
 
 def get_cache_dir():
-    if not os.path.exists(CACHE_DIR):
-        os.makedirs(CACHE_DIR)
+    for CACHE_DIR in CACHE_DIRs:
+        if not os.path.exists(CACHE_DIR):
+            os.makedirs(CACHE_DIR)
 
-    return CACHE_DIR
+    return CACHE_DIRs
 
 
 def download_file(url, filename):
