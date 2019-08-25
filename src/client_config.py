@@ -22,6 +22,7 @@ if not os.path.exists(DATA_FOLDER):
     os.mkdir(DATA_FOLDER)
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 global CACHE_DIRs
-CACHE_DIRs = [os.path.join(SCRIPT_PATH, '..', 'cache')]
+if CACHE_DIRs is None:
+    CACHE_DIRs = [os.path.join(SCRIPT_PATH, '..', 'cache')]
 
 
