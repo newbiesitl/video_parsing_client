@@ -1,6 +1,5 @@
 import argparse
-from client_config import CACHE_DIR
-from utils import detect_car_give_ts, is_match, analyze
+from src.utils import detect_car_give_ts, is_match, analyze
 
 parser = argparse.ArgumentParser()
 parser.add_argument("args", nargs='*', default=None, )
