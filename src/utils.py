@@ -25,6 +25,9 @@ def analyze(ts1, ts2):
     car_left_b = None
     last_car_end = None
     car_right_b = None
+    ret = {
+        'record': []
+    }
     while cur_ts <= ts2:
         is_car_ret = detect_car_give_ts(cur_ts)
         if is_car_ret['status'] == 'error':
@@ -37,6 +40,7 @@ def analyze(ts1, ts2):
             if car_left_b is None:
                 car_left_b = reference_ts
             if last_car_end is not None and reference_ts > last_car_end + 1:
+                ret['record'].append([car_left_b, last_car_end])
                 print('car parked from %d to %d' % (car_left_b, last_car_end))
                 print('download image of %d and %d' % (car_left_b, last_car_end))
                 download_image(car_left_b)
@@ -74,11 +78,13 @@ def analyze(ts1, ts2):
         else:
             cur_ts += step_size
             # print('processing %.0f%s \r' % ((cur_ts-ts1)/(ts2-ts1) * 100, '%'))
-    if car_left_b is not None and car_left_b < car_right_b:
+    if car_left_b is not None and car_left_b < car_right_b and len(ret['record']) == 0:
+        ret['record'].append([car_left_b, last_car_end])
         print('car parked from %d to %d' % (car_left_b, last_car_end))
         print('download image of %d and %d' % (car_left_b, last_car_end))
         download_image(car_left_b)
         download_image(last_car_end)
+    return ret
 
 if __name__ == "__main__":
     ts1, ts2 = 1538087970, 1538097972
