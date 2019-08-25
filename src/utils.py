@@ -50,24 +50,38 @@ def analyze(ts1, ts2):
             l = cur_ts
             r = ts2
             m = (l+r)//2
+            prev_pos = None
             while l < m:
                 # print(l, r)
                 reference_with_prev = is_match(reference_ts, m-1)
                 reference_with_cur = is_match(reference_ts, m)
                 if reference_with_prev['status'] == 'error':
-                    print(reference_with_prev)
+                    ret['record'].append([car_left_b, prev_pos])
+                    print('car parked from %d to %d' % (car_left_b, prev_pos))
+                    print('download image of %d and %d' % (car_left_b, prev_pos))
+                    download_image(car_left_b)
+                    download_image(prev_pos)
+                    car_left_b = reference_ts
                     break
                 if reference_with_cur['status'] == 'error':
-                    print(reference_with_cur)
+                    ret['record'].append([car_left_b, prev_pos])
+                    print('car parked from %d to %d' % (car_left_b, prev_pos))
+                    print('download image of %d and %d' % (car_left_b, prev_pos))
+                    download_image(car_left_b)
+                    download_image(prev_pos)
+                    car_left_b = reference_ts
                     break
                 if reference_with_prev['result'].lower() == 'true' and reference_with_cur['result'].lower() == 'false':
                     car_right_b = cur_ts
                     break
                 elif reference_with_prev['result'].lower() == 'true' and reference_with_cur['result'].lower() == 'true':
+                    prev_pos = l
                     l = m
                 elif reference_with_prev['result'].lower() == 'false' and reference_with_cur['result'].lower() == 'true':
+                    prev_pos = l
                     l = m
                 elif reference_with_prev['result'].lower() == 'false' and reference_with_cur['result'].lower() == 'false':
+                    prev_pos = r
                     r = m
 
                 m = (l+r)//2
