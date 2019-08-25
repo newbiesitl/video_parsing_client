@@ -1,6 +1,6 @@
 import requests
 from src.client_config import DETECT_CAR_ENDPOINT_PREFIX, IS_SAME_CAR_ENDPOINT_PREFIX, GET_IMAGE_ENDPOINT_PREFIX, \
-    DATA_FOLDER
+    CACHE_DIR
 import numpy as np
 import cv2, os
 
@@ -12,7 +12,7 @@ def detect_car_give_ts(ts):
 def download_image(ts):
     url = GET_IMAGE_ENDPOINT_PREFIX+str(ts)
     r = requests.get(url)
-    file_path = os.path.join(DATA_FOLDER, str(ts)+'.jpeg')
+    file_path = os.path.join(CACHE_DIR, str(ts)+'.jpeg')
     f = open(file_path, 'wb+')
     f.write(bytearray(r.content))
     f.close()
