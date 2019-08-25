@@ -48,6 +48,7 @@ elif commend.lower() == 'analyze':
         print('need to pass at least 3 argument `python cars.py analyze ts1 ts2`')
     ts1, ts2 = int(args.args[1]), int(args.args[2])
     analyze(ts1, ts2)
+
 else:
     print('unknown commend %s' % (commend))
     exit()

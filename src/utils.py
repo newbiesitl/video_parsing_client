@@ -1,10 +1,26 @@
 import requests
-from src.client_config import DETECT_CAR_ENDPOINT_PREFIX, IS_SAME_CAR_ENDPOINT_PREFIX
+from src.client_config import DETECT_CAR_ENDPOINT_PREFIX, IS_SAME_CAR_ENDPOINT_PREFIX, GET_IMAGE_ENDPOINT_PREFIX, \
+    DATA_FOLDER
+import numpy as np
+import cv2, os
+
 def detect_car_give_ts(ts):
     url = DETECT_CAR_ENDPOINT_PREFIX+str(ts)
     r = requests.get(url)
     return r.json()
 
+def download_image(ts):
+    url = GET_IMAGE_ENDPOINT_PREFIX+str(ts)
+    r = requests.get(url)
+    file_path = os.path.join(DATA_FOLDER, str(ts)+'.jpeg')
+    f = open(file_path, 'wb+')
+    f.write(bytearray(r.content))
+    f.close()
+
+    # nparr = np.fromstring(r.content, np.uint8)
+    # decode image
+    # img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    # cv2.imwrite(os.path.join(DATA_FOLDER, str(ts)+'.ts'), img)
 
 def is_match(ts1, ts2):
     url = IS_SAME_CAR_ENDPOINT_PREFIX+'timeStamp1=%s&timeStamp2=%s' % (ts1, ts2)
@@ -34,6 +50,9 @@ def analyze(ts1, ts2):
                 car_left_b = reference_ts
             if last_car_end is not None and reference_ts > last_car_end + 1:
                 print('car parked from %d to %d' % (car_left_b, last_car_end))
+                print('download image of %d and %d' % (car_left_b, last_car_end))
+                download_image(car_left_b)
+                download_image(last_car_end)
                 car_left_b = reference_ts
             # run binary search here
             l = cur_ts
@@ -69,7 +88,9 @@ def analyze(ts1, ts2):
             # print('processing %.0f%s \r' % ((cur_ts-ts1)/(ts2-ts1) * 100, '%'))
     if car_left_b is not None and car_left_b < car_right_b:
         print('car parked from %d to %d' % (car_left_b, last_car_end))
-
+        print('download image of %d and %d' % (car_left_b, last_car_end))
+        download_image(car_left_b)
+        download_image(last_car_end)
 
 if __name__ == "__main__":
     ts1, ts2 = 1538087970, 1538097972
