@@ -48,7 +48,7 @@ if commend.lower() == 'detect':
     ts = int(ts)
     ret = detect_car_give_ts(ts)
     # ret = json.loads(ret)
-    print(ret['result'])
+    print(ret['result'].lower())
     if args.output is not None:
         for cache_dir in client_config.CACHE_DIRs:
             with open(os.path.join(cache_dir, args.output), 'w+') as f:
