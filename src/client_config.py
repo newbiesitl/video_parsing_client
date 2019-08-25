@@ -15,7 +15,7 @@ GET_FILE_ENDPOINT_PREFIX = server_ip+'v1/ask/get_file?ts='
 import os
 cur_dir = os.path.abspath(os.path.dirname(__file__))
 project_root = os.path.join(cur_dir, '..',)
-print('project root %s' % (project_root))
+# print('project root %s' % (project_root))
 DATA_FOLDER = os.path.join(project_root, 'cache')
 
 if not os.path.exists(DATA_FOLDER):
