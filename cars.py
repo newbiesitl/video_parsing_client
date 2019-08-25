@@ -1,14 +1,17 @@
 import argparse
-
-from src import cache
-from src.utils import detect_car_give_ts, is_match, analyze
+from client_config import CACHE_DIR
+from utils import detect_car_give_ts, is_match, analyze
 
 parser = argparse.ArgumentParser()
 parser.add_argument("args", nargs='*', default=None, )
-
+parser.add_argument('-v', action="cache_dir", default=None,)
 # parser.add_argument('')
 args = parser.parse_args()
+cache_dir = parser.cache_dir
 args_len = len(args.args)
+if cache_dir is not None:
+    global CACHE_DIR
+    CACHE_DIR = cache_dir
 
 if args_len < 2:
     print('''
